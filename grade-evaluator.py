@@ -40,14 +40,73 @@ def evaluate_grades(data):
     print("\n--- Processing Grades ---")
     
     # TODO: a) Check if all scores are percentage based (0-100)
-    print(data)
+    print("\n--- Checking score range ---")
+    for grade in data:
+        if not 0 <= grade["score"] <= 100:
+            print("Invalid grade range. All grades must be in the range [0-100]")
+
+    print("Successfully checked score range. All weights are in the [0-100] range.")
     # TODO: b) Validate total weights (Total=100, Summative=40, Formative=60)
+    print("\n--- Checking total weights ---")
+    summative = 0
+    formative = 0
+    for grade in data:
+        if grade["group"] == "Summative":
+            summative += grade["weight"]
+        else:
+            formative += grade["weight"]
+    if formative != 60:
+        print("Invalid weight. Formative weight must be 60.")
+    if summative != 40:
+        print("Invalid weight. Summative weight must be 40.")
+    if summative + formative != 100:
+        print("Invalid total weight. Weight must be 100")
+    print("Successfully checked total weight. It's 100 (40 for Formatives & 60 for Summatives)")
     # TODO: c) Calculate the Final Grade and GPA
+    print("\n--- Calculating total grades ---")
+    final_grades = []
+    for grade in data:
+        final_grades.append((grade["score"] / 100) * grade["weight"])
+    total_grade = sum(final_grades)
+    print(f"Total grade: {total_grade}")
+    print("\n--- Calculating GPA ---")
+    gpa = (total_grade / 100) * 5.0
+    print(f"GPA: {gpa}")
     # TODO: d) Determine Pass/Fail status (>= 50% in BOTH categories)
+    print("\n--- Performing Pass/Fail check ---")
+    summative = 0
+    formative = 0
+    decision = ""
+    for grade in data:
+        if grade["group"] == "summative":
+            summative += grade["score"]
+        else:
+            formative += grade["score"]
+    if summative >= 50 or formative >= 50:
+        decision = "PASS"
+    else:
+        decision = "FAIL"
+    print("Finished perfoming Pass/Fail check")
     # TODO: e) Check for failed formative assignments (< 50%)
     #          and determine which one(s) have the highest weight for resubmission.
+    print("\n--- Checking for formatives eligible for resubmission ---")
+    resub = []
+    resub_weights = []
+    for grade in data:
+        if grade["group"] == "Formative" and grade["score"] < 50:
+            resub.append(grade)
+            resub_weights.append(grade["weight"])
+    max_weight = max(resub_weights)
+    resub_assignments = []
+    for grade in resub:
+        if grade["weight"] == max_weight:
+            resub_assignments.append(grade['assignment'])
+    print("Finished check for formatives that are eligible for resubmission")
     # TODO: f) Print the final decision (PASSED / FAILED) and resubmission options
-    
+    print(f"Final desicision: {decision}")
+    print("Assignments eligible for resubmission")
+    for a in resub_assignments:
+        print(f"  {a}")
     pass
 
 if __name__ == "__main__":
