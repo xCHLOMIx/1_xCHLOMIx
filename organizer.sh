@@ -9,20 +9,24 @@ then
 	if [ -e $filename ]
 	then
 		mv ./$filename "$filename_$timestamp.csv"
-		mv ./$filename ./archive
-		echo "Timestamp: $timestamp Original filename: $filename Archived filename: grades_$timestamp.csv" >> ./archive/organizer.log
+		mv ./"$filename_$timestamp.csv" ./archive
+		echo "Timestamp: $timestamp Original filename: $filename Archived filename: $filename_$timestamp.csv" >> ./archive/organizer.log
+		touch grades.csv
 	else
 		echo "File does not exists"
 	fi
 else
-	echo "Creative archive directory"
+	echo "Creating archive directory"
 	mkdir archive
 	if [ -e $filename ]
 	then
-		mv ./$filename "grades_$timestamp.csv"
+		mv ./$filename "$filename_$timestamp.csv"
 		mv ./$filename ./archive
-		echo "Timestamp: $timestamp Original filename: $filename Archived filename: grades_$timestamp.csv" >> ./archive/organizer.log
+		echo "Timestamp: $timestamp Original filename: $filename Archived filename: $filename_$timestamp.csv" >> ./archive/organizer.log
+		touch grades.csv
 	else
 		echo "File does not exists"
 	fi
 fi
+
+echo "Finished Archival and Logging"
